@@ -24,7 +24,7 @@ const EditorPart = () => {
   const [response, setResponse] = useState("");
 
   const ai = new GoogleGenAI({
-    apiKey:import.meta.env.VITE_GOOGLE_API_KEY,
+    apiKey:"AIzaSyBteGnETIOPZ1sO68MUJhAiDGDftikVlhw",
   });
 
   async function reviewCode() {
