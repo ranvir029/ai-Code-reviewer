@@ -24,7 +24,7 @@ const EditorPart = () => {
   const [response, setResponse] = useState("");
 
   const ai = new GoogleGenAI({
-    apiKey: import.meta.env.VITE_GEMINI_API_KEY,
+    apiKey:import.meta.env.VITE_GOOGLE_API_KEY,
   });
 
   async function reviewCode() {
@@ -61,77 +61,83 @@ Here is the code:\n\`\`\`${selectedOption.value}\n${code}\n\`\`\``,
   }
 
   return (
-    <div
-      className="
+    <>
+      <div
+        className="
         flex flex-col lg:flex-row
         h-[calc(100vh-4rem)]
         overflow-y-auto lg:overflow-hidden
       "
-    >
-      {/* Left Section */}
-      <div className="w-full lg:w-1/2 px-4 py-4 flex flex-col">
-        <div className="flex items-center gap-4 flex-wrap">
-          <Select
-            value={selectedOption}
-            onChange={(options) => setSelectedOption(options)}
-            options={options}
-            className="flex-1 min-w-[150px]"
-          />
-          <button
-            onClick={() => {
-              if (code === "") {
-                alert("Please Enter the code first");
-              } else {
-                reviewCode();
-              }
-            }}
-            className="bg-[#052659] text-[15px] border-none rounded-md h-[35px] text-white cursor-pointer font-medium px-4 py-1"
-          >
-            Review
-          </button>
+      >
+        {/* Left Section */}
+        <div className="w-full lg:w-1/2 px-4 py-4 flex flex-col">
+          <div className="flex items-center gap-4 flex-wrap">
+            <Select
+              value={selectedOption}
+              onChange={(options) => setSelectedOption(options)}
+              options={options}
+              className="flex-1 min-w-[150px]"
+            />
+            <button
+              onClick={() => {
+                if (code === "") {
+                  alert("Please Enter the code first");
+                } else {
+                  reviewCode();
+                }
+              }}
+              className="bg-[#052659] text-[15px] border-none rounded-md h-[38px] text-white cursor-pointer font-medium px-4 py-2"
+            >
+              Review
+            </button>
+          </div>
+          <div className="w-full flex-1 min-h-[300px] mt-3 ">
+            <Editor
+              language={selectedOption.value}
+              theme="vs-dark"
+              defaultValue="// some comment"
+              className="rounded-lg w-full h-full"
+              onChange={(e) => setCode(e)}
+            />
+          </div>
         </div>
-        <div className="w-full h-[98%]">
-          <Editor
-            language={selectedOption.value}
-            theme="vs-dark"
-            defaultValue="// some comment"
-            className="rounded-lg"
-            onChange={(e) => setCode(e)}
-          />
-        </div>
-      </div>
 
-      {/* Right Section */}
-      <div
-        className="
+        {/* Right Section */}
+        <div
+          className="
           w-full lg:w-1/2
           bg-[#1c2130] rounded-tl-xl
           mt-6 lg:mt-0
           flex flex-col
         "
-      >
-        <div className="shadow-xl flex justify-between items-center sticky top-0 bg-[#2d2f34] z-10">
-          <h2 className="text-white font-bold text-[17px] px-6 py-2 h-12 rounded-tl-xl font-[Euclid Circular A]">
-            Response
-          </h2>
-          <button
-            className="border-none bg-white text-black mr-3 cursor-pointer px-4 py-2 font-medium rounded-sm"
-            onClick={() => {
-              setResponse("");
-            }}
-          >
-            Clear All
-          </button>
-        </div>
-        <div
-          className="p-4 text-white overflow-y-auto"
-          style={{ maxHeight: "78vh" }}
         >
-          {loading && <PulseLoader color="blue" size={12} />}
-          <Markdown>{response}</Markdown>
+          <div className="shadow-xl flex justify-between items-center sticky top-0 bg-[#2d2f34] z-10">
+            <h2 className="text-white  response font-bold text-[17px] px-6 py-2 h-12 rounded-tl-xl font-[Euclid Circular A]">
+              Response
+            </h2>
+            <button
+              className="border-none bg-white text-black mr-3 cursor-pointer px-4 py-2 font-medium rounded-sm"
+              onClick={() => {
+                setResponse("");
+              }}
+            >
+              Clear All
+            </button>
+          </div>
+          <div
+            className="p-4 text-white overflow-y-auto min-h-[200px] lg:min-h-[0]"
+            style={{ maxHeight: "78vh" }}
+          >
+            {loading && (
+              <div className="flex justify-center items-center h-full">
+                <PulseLoader color="blue" size={12} />
+              </div>
+            )}
+            <Markdown>{response}</Markdown>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
